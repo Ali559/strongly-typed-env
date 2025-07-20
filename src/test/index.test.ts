@@ -17,9 +17,9 @@ describe('ENV Parser', () => {
   beforeEach(() => {
     vi.clearAllMocks();
     // Reset console methods
-    vi.spyOn(console, 'log').mockImplementation(() => { });
-    vi.spyOn(console, 'warn').mockImplementation(() => { });
-    vi.spyOn(console, 'error').mockImplementation(() => { });
+    vi.spyOn(console, 'log').mockImplementation(() => {});
+    vi.spyOn(console, 'warn').mockImplementation(() => {});
+    vi.spyOn(console, 'error').mockImplementation(() => {});
   });
 
   afterEach(() => {
@@ -340,7 +340,7 @@ STRING NAME=Second`;
 
   describe('generateTypes()', () => {
     beforeEach(() => {
-      mockedFs.writeFileSync.mockImplementation(() => { });
+      mockedFs.writeFileSync.mockImplementation(() => {});
       mockedFs.mkdirSync.mockImplementation(() => '');
     });
 

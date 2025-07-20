@@ -378,5 +378,3 @@ export function createTypedConfig<T>() {
     return config<T>(options);
   };
 }
-
-
