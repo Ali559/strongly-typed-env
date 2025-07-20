@@ -7,7 +7,7 @@ import {
   createTypedConfig,
   EnvType,
   EnvValue,
-} from '../index.js';
+} from '../index';
 
 // Mock fs module
 vi.mock('fs');
@@ -17,9 +17,9 @@ describe('ENV Parser', () => {
   beforeEach(() => {
     vi.clearAllMocks();
     // Reset console methods
-    vi.spyOn(console, 'log').mockImplementation(() => {});
-    vi.spyOn(console, 'warn').mockImplementation(() => {});
-    vi.spyOn(console, 'error').mockImplementation(() => {});
+    vi.spyOn(console, 'log').mockImplementation(() => { });
+    vi.spyOn(console, 'warn').mockImplementation(() => { });
+    vi.spyOn(console, 'error').mockImplementation(() => { });
   });
 
   afterEach(() => {
@@ -284,7 +284,7 @@ STRING UPPER_CASE=test`;
       mockedFs.existsSync.mockReturnValue(true);
       mockedFs.readFileSync.mockReturnValue(envContent);
 
-      const { parsedEnv } = config();
+      const { parsedEnv }: { parsedEnv: Record<string, string> } = config();
 
       expect(Object.keys(parsedEnv)).toEqual([
         'validName',
@@ -340,7 +340,7 @@ STRING NAME=Second`;
 
   describe('generateTypes()', () => {
     beforeEach(() => {
-      mockedFs.writeFileSync.mockImplementation(() => {});
+      mockedFs.writeFileSync.mockImplementation(() => { });
       mockedFs.mkdirSync.mockImplementation(() => '');
     });
 

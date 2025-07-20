@@ -1,4 +1,4 @@
-type EnvValue = string | number | boolean | Array<Record<string, any> | any> | Record<string, any>;
+export type EnvValue = string | number | boolean | Array<Record<string, any> | any> | Record<string, any>;
 type TypeMap = {
     NUMBER: number;
     STRING: string;
@@ -6,7 +6,7 @@ type TypeMap = {
     ARRAY: Array<Record<string, any> | any>;
     OBJ: Record<string, any>;
 };
-type EnvType = keyof TypeMap;
+export type EnvType = keyof TypeMap;
 /**
  * Generate TypeScript types for environment variables from a .env file.
  * The generated file contains a single interface with the same name as the

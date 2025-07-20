@@ -1,7 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 
-type EnvValue =
+export type EnvValue =
   | string
   | number
   | boolean
@@ -16,7 +16,7 @@ type TypeMap = {
   OBJ: Record<string, any>;
 };
 
-type EnvType = keyof TypeMap;
+export type EnvType = keyof TypeMap;
 
 const regex = /^(\w+)\s+(\w+)\s*=\s*(.*)$/i;
 const variableNamingRegex = /^[a-zA-Z_][a-zA-Z0-9_]*$/;
@@ -378,4 +378,5 @@ export function createTypedConfig<T>() {
     return config<T>(options);
   };
 }
+
 
