@@ -306,11 +306,7 @@ git add src/types/env-types.ts
 ### Advanced Usage
 
 ```typescript
-import {
-  config,
-  validateEnv,
-  createTypedConfig,
-} from 'strongly-typed-env';
+import { config, validateEnv, createTypedConfig } from 'strongly-typed-env';
 import { EnvConfig, envSchema } from './types/env-types';
 
 // Create environment-specific configs
