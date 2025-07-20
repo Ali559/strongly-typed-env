@@ -14,7 +14,7 @@ A powerful, type-safe environment configuration library for Node.js applications
 ## Installation
 
 ```bash
-npm install your-env-config-package
+npm install strongly-typed-env
 ```
 
 ## Quick Start
@@ -47,7 +47,7 @@ Add a script to your `package.json`:
 ```json
 {
   "scripts": {
-    "generate-env-types": "node -e \"require('./dist/index.js').generateTypes('.env', './src/types/env-types.ts')\""
+    "generate-env-types": "node -e \"require('strongly-typed-env').generateTypes('.env', './src/types/env-types.ts')\""
   }
 }
 ```
@@ -310,7 +310,7 @@ import {
   config,
   validateEnv,
   createTypedConfig,
-} from 'your-env-config-package';
+} from 'strongly-typed-env';
 import { EnvConfig, envSchema } from './types/env-types';
 
 // Create environment-specific configs
