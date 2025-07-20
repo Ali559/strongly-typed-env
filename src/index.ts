@@ -1,22 +1,8 @@
 import fs from 'fs';
 import path from 'path';
-
-export type EnvValue =
-  | string
-  | number
-  | boolean
-  | Array<Record<string, any> | any>
-  | Record<string, any>;
-
-type TypeMap = {
-  NUMBER: number;
-  STRING: string;
-  BOOL: boolean;
-  ARRAY: Array<Record<string, any> | any>;
-  OBJ: Record<string, any>;
-};
-
-export type EnvType = keyof TypeMap;
+import type { ASTNode, EnvType, EnvValue, Token } from './types.ts';
+import { lexer, tokenize } from './lexer.ts';
+import { parser } from './parser.ts';
 
 const regex = /^(\w+)\s+(\w+)\s*=\s*(.*)$/i;
 const variableNamingRegex = /^[a-zA-Z_][a-zA-Z0-9_]*$/;
@@ -368,7 +354,18 @@ export function validateEnv<T extends Record<string, EnvValue>>(
   return missingKeys.length === 0;
 }
 
-// Utility to create a typed config function
+/**
+ * Utility to create a typed config function.
+ *
+ * This function returns a typed config function that returns an object with a
+ * single property `parsedEnv` of type `T`.
+ *
+ * The options are the same as the `config()` function.
+ *
+ * @template T - A type extending Record<string, EnvValue> representing the environment.
+ * @param {object} [options] Options to customize the config behavior.
+ * @returns {function(options: {path?: string, encoding?: BufferEncoding, strict?: boolean}): {parsedEnv: T}} A typed config function.
+ */
 export function createTypedConfig<T>() {
   return function (options?: {
     path?: string;
@@ -380,3 +377,21 @@ export function createTypedConfig<T>() {
 }
 
 
+const tokenizer = () => {
+  const file = fs.readFileSync('.env', { encoding: 'utf-8' });
+  const declarations = lexer(file); // Step 1: get list of strings
+
+  const parsedResults: ASTNode[] = [];
+
+  for (const declaration of declarations) {
+    const tokens = tokenize(declaration); // Step 2: get Token[]
+
+    const parsed = parser(tokens as Token[]);        // Step 3: parse it
+    console.log(parsed);
+
+    parsedResults.push(parsed);
+  }
+
+  console.log(parsedResults); // OR return them
+};
+tokenizer()
