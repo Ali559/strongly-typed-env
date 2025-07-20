@@ -18,7 +18,9 @@
     "test:coverage": "vitest --coverage",
     "build": "tsc",
     "format": "prettier --write .",
-    "ci": "npm run build && npm run format && npm run test"
+    "ci": "npm run build && npm run format && npm run test",
+    "local-release": "changeset version && changeset publish",
+    "prepublishOnly": "npm run ci"
   },
   "files": [
     "dist",
