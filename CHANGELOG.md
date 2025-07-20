@@ -1,5 +1,15 @@
 # strongly-typed-env
 
+## 1.1.0
+
+### Minor Changes
+
+- 3f503b6: changed readme file
+
+### Patch Changes
+
+- fb9f9f7: updated readme
+
 ## 1.0.3
 
 ### Patch Changes
