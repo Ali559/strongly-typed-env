@@ -192,6 +192,5 @@ MIT © [Ali Barznji](https://github.com/Ali559)
 
 This project was built to simplify working with `.env` files in TypeScript-heavy applications by combining static typing, runtime validation, and type generation—all with zero dependencies.
 
-```
 
 ```

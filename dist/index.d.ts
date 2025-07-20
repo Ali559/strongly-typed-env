@@ -1,15 +1,10 @@
-export type EnvValue =
-  | string
-  | number
-  | boolean
-  | Array<Record<string, any> | any>
-  | Record<string, any>;
+export type EnvValue = string | number | boolean | Array<Record<string, any> | any> | Record<string, any>;
 type TypeMap = {
-  NUMBER: number;
-  STRING: string;
-  BOOL: boolean;
-  ARRAY: Array<Record<string, any> | any>;
-  OBJ: Record<string, any>;
+    NUMBER: number;
+    STRING: string;
+    BOOL: boolean;
+    ARRAY: Array<Record<string, any> | any>;
+    OBJ: Record<string, any>;
 };
 export type EnvType = keyof TypeMap;
 /**
@@ -25,15 +20,11 @@ export type EnvType = keyof TypeMap;
  * @param {boolean} [options.exportSchema=true] Whether to export the schema as a constant.
  * @returns {void}
  */
-export declare function generateTypes(
-  envPath?: string,
-  outputPath?: string,
-  options?: {
+export declare function generateTypes(envPath?: string, outputPath?: string, options?: {
     interfaceName?: string;
     includeComments?: boolean;
     exportSchema?: boolean;
-  },
-): void;
+}): void;
 /**
  * Parses environment variables from a file and returns them as a typed object.
  * @param options - Options for parsing the environment file.
@@ -43,11 +34,11 @@ export declare function generateTypes(
  * @returns An object with the parsed environment variables.
  */
 export declare function config<T>(options?: {
-  path?: string;
-  encoding?: BufferEncoding;
-  strict?: boolean;
+    path?: string;
+    encoding?: BufferEncoding;
+    strict?: boolean;
 }): {
-  parsedEnv: T;
+    parsedEnv: T;
 };
 /**
  * Validates that the environment variables match the specified schema.
@@ -61,15 +52,12 @@ export declare function config<T>(options?: {
  * @param {Record<string, EnvType>} schema - The schema against which the environment is validated.
  * @returns {boolean} - Returns true if the environment matches the schema; false otherwise.
  */
-export declare function validateEnv<T extends Record<string, EnvValue>>(
-  env: Record<string, EnvValue>,
-  schema: Record<string, EnvType>,
-): env is T;
+export declare function validateEnv<T extends Record<string, EnvValue>>(env: Record<string, EnvValue>, schema: Record<string, EnvType>): env is T;
 export declare function createTypedConfig<T>(): (options?: {
-  path?: string;
-  encoding?: BufferEncoding;
-  strict?: boolean;
+    path?: string;
+    encoding?: BufferEncoding;
+    strict?: boolean;
 }) => {
-  parsedEnv: T;
+    parsedEnv: T;
 };
 export {};
