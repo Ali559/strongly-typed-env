@@ -3,9 +3,6 @@
 
 > A tiny zero-dependency TypeScript library for **strongly typed environment variables**, where you define types directly in your `.env` file.
 
-[![npm](https://img.shields.io/npm/v/strongly-typed-env)](https://www.npmjs.com/package/strongly-typed-env)
-[![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
-
 ---
 
 ## ✨ Features
