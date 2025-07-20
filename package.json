@@ -3,7 +3,12 @@
   "version": "1.0.1",
   "description": "a tiny library for strongly typed environment variables where you can specify the types in the .env file itself, no dependencies",
   "license": "MIT",
-  "author": "Ali Barznji",
+  "author": {
+    "name": "Ali Barznji",
+    "email": "ali99yasin@gmail.com",
+    "github": "https://github.com/Ali559",
+    "linkedin": "https://www.linkedin.com/in/ali-barznji-36b664325/"
+  },
   "type": "module",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
