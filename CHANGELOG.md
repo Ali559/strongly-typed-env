@@ -1,5 +1,11 @@
 # strongly-typed-env
 
+## 1.0.3
+
+### Patch Changes
+
+- 11e764d: added github link and keywords
+
 ## 1.0.2
 
 ### Patch Changes

@@ -1,6 +1,6 @@
 {
   "name": "strongly-typed-env",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "a tiny library for strongly typed environment variables where you can specify the types in the .env file itself, no dependencies",
   "license": "MIT",
   "author": {
@@ -8,6 +8,10 @@
     "email": "ali99yasin@gmail.com",
     "github": "https://github.com/Ali559",
     "linkedin": "https://www.linkedin.com/in/ali-barznji-36b664325/"
+  },
+  "repository": {
+    "url": "https://github.com/Ali559/strongly-typed-env.git",
+    "type": "git"
   },
   "type": "module",
   "main": "dist/index.js",
@@ -26,6 +30,20 @@
     "dist",
     "README.md",
     "LICENSE"
+  ],
+  "keywords": [
+    "typescript",
+    "environment",
+    "variables",
+    "strongly",
+    "typed",
+    "env",
+    "config",
+    "schema",
+    "validation",
+    "runtime",
+    "type",
+    "check"
   ],
   "devDependencies": {
     "@changesets/cli": "^2.29.5",
