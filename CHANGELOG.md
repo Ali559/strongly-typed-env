@@ -1,5 +1,11 @@
 # strongly-typed-env
 
+## 2.2.0
+
+### Minor Changes
+
+- c33292a: small change to docs
+
 ## 2.1.0
 
 ### Minor Changes
