@@ -367,8 +367,44 @@ OBJ CONFIG={"key":"value"}`;
       expect(generatedContent).toContain('AGE: number;');
       expect(generatedContent).toContain('NAME: string;');
       expect(generatedContent).toContain('ACTIVE: boolean;');
-      expect(generatedContent).toContain('TAGS: any[];');
-      expect(generatedContent).toContain('CONFIG: Record<string, any>;');
+      expect(generatedContent).toContain('TAGS: string[];');
+      expect(generatedContent).toContain('CONFIG: { key: string };');
+    });
+
+    it('should generate correct TypeScript interface for nested objects', () => {
+      const envContent = `
+      OBJ CONFIG ={"database":{ "host": "localhost", "port": 5432 },"config": {"debug": true,"key": "value"}}
+      ARRAY TAGS=[{"tag1":"this is tag 1"},{"tag2":"this is tag 2"}, {"tag3":"this is tag 3"}]`;
+
+      mockedFs.existsSync.mockReturnValue(true);
+      mockedFs.readFileSync.mockReturnValue(envContent);
+
+      generateTypes('.env', './env-types.ts');
+
+      const writeCall = mockedFs.writeFileSync.mock.calls[0];
+      const generatedContent = writeCall[1] as string;
+
+      expect(generatedContent).toContain(
+        'CONFIG: { database: { host: string; port: number }; config: { debug: boolean; key: string } }',
+      );
+      expect(generatedContent).toContain(
+        '  TAGS: { tag1: string } | { tag2: string } | { tag3: string }[];',
+      );
+    });
+    it('should generate correct TypeScript interface for nested arrays', () => {
+      const envContent = `ARRAY users = [{"id":1,"name":"Alice","isActive":true,"roles":["admin","editor"],"profile":{"age":30,"location":{"city":"New York","zip":"10001","coordinates":{"lat":40.7128,"lng":-74.006}},"preferences":{"theme":"dark","notifications":{"email":true,"sms":false}}},"metadata":null},{"id":2,"name":"Bob","isActive":false,"roles":["viewer"],"profile":{"age":24,"location":{"city":"Los Angeles","zip":"90001","coordinates":{"lat":34.0522,"lng":-118.2437}},"preferences":{"theme":"light","notifications":{"email":false,"sms":true}}},"metadata":{"notes":"VIP user","lastLogin":"2024-06-10T12:00:00Z"}},{"id":3,"name":"Charlie","isActive":true,"roles":[],"profile":{"age":40,"location":{"city":"Chicago","zip":"60601","coordinates":{"lat":41.8781,"lng":-87.6298}},"preferences":{"theme":"dark","notifications":{"email":true,"sms":true}}},"metadata":{"notes":null,"lastLogin":null}}]`;
+
+      mockedFs.existsSync.mockReturnValue(true);
+      mockedFs.readFileSync.mockReturnValue(envContent);
+
+      generateTypes('.env', './env-types.ts');
+
+      const writeCall = mockedFs.writeFileSync.mock.calls[0];
+      const generatedContent = writeCall[1] as string;
+
+      expect(generatedContent).toContain(
+        `  users: { id: number; name: string; isActive: boolean; roles: string[]; profile: { age: number; location: { city: string; zip: string; coordinates: { lat: number; lng: number } }; preferences: { theme: string; notifications: { email: boolean; sms: boolean } } }; metadata: null } | { id: number; name: string; isActive: boolean; roles: string[]; profile: { age: number; location: { city: string; zip: string; coordinates: { lat: number; lng: number } }; preferences: { theme: string; notifications: { email: boolean; sms: boolean } } }; metadata: { notes: string; lastLogin: string } } | { id: number; name: string; isActive: boolean; roles: any[]; profile: { age: number; location: { city: string; zip: string; coordinates: { lat: number; lng: number } }; preferences: { theme: string; notifications: { email: boolean; sms: boolean } } }; metadata: { notes: null; lastLogin: null } }[];`,
+      );
     });
 
     it('should generate custom interface name and options', () => {

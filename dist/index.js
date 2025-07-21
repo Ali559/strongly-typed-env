@@ -121,6 +121,36 @@ function parseEnvFile(envPath) {
   return envVars;
 }
 /**
+ * Converts a value to a TypeScript type string.
+ *
+ * @param value - The value to convert.
+ * @returns A string representing the TypeScript type of the value.
+ */
+function valueToTSType(value) {
+  if (value === null) return 'null';
+  if (Array.isArray(value)) {
+    if (value.length === 0) return 'any[]';
+    const elementTypes = Array.from(new Set(value.map(valueToTSType)));
+    // If all elements have same type
+    if (elementTypes.length === 1) {
+      return `${elementTypes[0]}[]`;
+    }
+    // If mixed types, use union
+    return `${elementTypes.join(' | ')}[]`;
+  }
+  if (typeof value === 'object') {
+    const entries = Object.entries(value);
+    if (entries.length === 0) return 'Record<string, any>';
+    return `{ ${entries
+      .map(([key, val]) => `${key}: ${valueToTSType(val)}`)
+      .join('; ')} }`;
+  }
+  if (typeof value === 'string') return 'string';
+  if (typeof value === 'number') return 'number';
+  if (typeof value === 'boolean') return 'boolean';
+  return 'any';
+}
+/**
  * Generate TypeScript types for environment variables from a .env file.
  * The generated file contains a single interface with the same name as the
  * interfaceName option, and a type guard function isEnvKey to check if a
@@ -170,14 +200,15 @@ export function generateTypes(
     }
     // Add the main interface
     content += `export interface ${interfaceName} {\n`;
-    envVars.forEach(({ key, type }) => {
-      const tsType = {
-        NUMBER: 'number',
-        STRING: 'string',
-        BOOL: 'boolean',
-        ARRAY: 'any[]',
-        OBJ: 'Record<string, any>',
-      }[type];
+    envVars.forEach(({ key, type, value }) => {
+      const tsType =
+        type === 'ARRAY' || type === 'OBJ'
+          ? valueToTSType(value) // new inferred type
+          : {
+              NUMBER: 'number',
+              STRING: 'string',
+              BOOL: 'boolean',
+            }[type];
       if (includeComments) {
         content += `  /** Type: ${type} */\n`;
       }
