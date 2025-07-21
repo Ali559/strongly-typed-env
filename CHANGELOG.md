@@ -1,5 +1,11 @@
 # strongly-typed-env
 
+## 1.1.1
+
+### Patch Changes
+
+- 6d85bef: Added type safety for nested arrays and objects: go Crazy ;)
+
 ## 1.1.0
 
 ### Minor Changes
