@@ -1,5 +1,11 @@
 # strongly-typed-env
 
+## 2.0.0
+
+### Major Changes
+
+- f015a8d: added type safety for all nested objects
+
 ## 1.1.1
 
 ### Patch Changes
