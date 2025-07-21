@@ -10,6 +10,7 @@ A powerful, type-safe environment configuration library for Node.js applications
 - 📝 **Auto-generated documentation** with comments and schemas
 - 🔍 **Duplicate detection** and environment validation
 - 🚀 **Easy integration** with existing Node.js projects
+- ✨ **Precise type inference** for objects and arrays with actual property types
 
 ## Installation
 
@@ -38,6 +39,17 @@ OBJ REDIS_CONFIG = {"host": "localhost", "port": 6379, "retryDelayOnFailover": 1
 # Feature Flags
 BOOL ENABLE_LOGGING = true
 BOOL DEBUG_MODE = false
+
+# Advanced Examples
+ARRAY PORT_NUMBERS = [3000, 4000, 5000]
+ARRAY MIXED_ARRAY = ["string", 42, true]
+OBJ SERVER_CONFIG = {
+  "host": "localhost",
+  "port": 8080,
+  "ssl": true,
+  "timeout": 30000,
+  "features": ["auth", "logging", "metrics"]
+}
 ```
 
 ### 2. Generate TypeScript types
@@ -58,7 +70,7 @@ Run the type generation:
 npm run generate-env-types
 ```
 
-This generates a `./src/types/env-types.ts` file with:
+This generates a `./src/types/env-types.ts` file with precise types:
 
 ```typescript
 /**
@@ -82,13 +94,29 @@ export interface EnvConfig {
   /** Type: NUMBER */
   MAX_CONNECTIONS: number;
   /** Type: ARRAY */
-  ALLOWED_ORIGINS: any[];
+  ALLOWED_ORIGINS: string[];
   /** Type: OBJ */
-  REDIS_CONFIG: Record<string, any>;
+  REDIS_CONFIG: {
+    host: string;
+    port: number;
+    retryDelayOnFailover: number;
+  };
   /** Type: BOOL */
   ENABLE_LOGGING: boolean;
   /** Type: BOOL */
   DEBUG_MODE: boolean;
+  /** Type: ARRAY */
+  PORT_NUMBERS: number[];
+  /** Type: ARRAY */
+  MIXED_ARRAY: (string | number | boolean)[];
+  /** Type: OBJ */
+  SERVER_CONFIG: {
+    host: string;
+    port: number;
+    ssl: boolean;
+    timeout: number;
+    features: string[];
+  };
 }
 
 export const envSchema = {
@@ -101,6 +129,9 @@ export const envSchema = {
   REDIS_CONFIG: 'OBJ',
   ENABLE_LOGGING: 'BOOL',
   DEBUG_MODE: 'BOOL',
+  PORT_NUMBERS: 'ARRAY',
+  MIXED_ARRAY: 'ARRAY',
+  SERVER_CONFIG: 'OBJ',
 } as const;
 
 export type EnvKey = keyof EnvConfig;
@@ -117,6 +148,9 @@ export const envKeys: EnvKey[] = [
   'REDIS_CONFIG',
   'ENABLE_LOGGING',
   'DEBUG_MODE',
+  'PORT_NUMBERS',
+  'MIXED_ARRAY',
+  'SERVER_CONFIG',
 ];
 
 // Type guard to check if a key exists in the environment config
@@ -139,12 +173,17 @@ const { parsedEnv } = config<EnvConfig>({
 
 // Validate against schema
 if (validateEnv(parsedEnv, envSchema)) {
-  // Now parsedEnv is fully typed as EnvConfig
+  // Now parsedEnv is fully typed as EnvConfig with precise types
   console.log(`Database URL: ${parsedEnv.DATABASE_URL}`);
   console.log(`Port: ${parsedEnv.DATABASE_PORT}`);
   console.log(`SSL enabled: ${parsedEnv.DATABASE_SSL}`);
-  console.log(`Allowed origins: ${parsedEnv.ALLOWED_ORIGINS.join(', ')}`);
-  console.log(`Redis host: ${parsedEnv.REDIS_CONFIG.host}`);
+  console.log(`Allowed origins: ${parsedEnv.ALLOWED_ORIGINS.join(', ')}`); // string[] methods available
+  console.log(`Redis host: ${parsedEnv.REDIS_CONFIG.host}`); // Typed object properties
+  console.log(`Redis port: ${parsedEnv.REDIS_CONFIG.port}`); // IntelliSense knows this is a number
+  console.log(`Port numbers: ${parsedEnv.PORT_NUMBERS.map((p) => p * 2)}`); // number[] methods
+  console.log(
+    `Server features: ${parsedEnv.SERVER_CONFIG.features.length} features`,
+  ); // Nested array typing
 } else {
   console.error('Environment validation failed');
   process.exit(1);
@@ -155,7 +194,7 @@ if (validateEnv(parsedEnv, envSchema)) {
 
 ### `generateTypes(envPath?, outputPath?, options?)`
 
-Generates TypeScript types from an environment file.
+Generates TypeScript types from an environment file with precise type inference for objects and arrays.
 
 **Parameters:**
 
@@ -218,13 +257,61 @@ const { parsedEnv } = getConfig({ strict: true });
 
 ## Supported Types
 
-| Type     | TypeScript Type       | Example Value             |
-| -------- | --------------------- | ------------------------- |
-| `STRING` | `string`              | `"hello world"`           |
-| `NUMBER` | `number`              | `42`, `3.14`              |
-| `BOOL`   | `boolean`             | `true`, `false`           |
-| `ARRAY`  | `any[]`               | `[1, 2, 3]`, `["a", "b"]` |
-| `OBJ`    | `Record<string, any>` | `{"key": "value"}`        |
+| Type     | TypeScript Type           | Example Value                                 | Generated Type Example                                    |
+| -------- | ------------------------- | --------------------------------------------- | --------------------------------------------------------- |
+| `STRING` | `string`                  | `"hello world"`                               | `string`                                                  |
+| `NUMBER` | `number`                  | `42`, `3.14`                                  | `number`                                                  |
+| `BOOL`   | `boolean`                 | `true`, `false`                               | `boolean`                                                 |
+| `ARRAY`  | Precise array types       | `[1, 2, 3]`, `["a", "b"]`, `[1, "a", true]`   | `number[]`, `string[]`, `(number \| string \| boolean)[]` |
+| `OBJ`    | Precise object interfaces | `{"name": "John", "age": 30, "active": true}` | `{ name: string; age: number; active: boolean }`          |
+
+## Advanced Type Examples
+
+### Complex Objects
+
+```env
+OBJ DATABASE_CONFIG = {
+  "connections": {
+    "read": {"host": "read-db", "port": 5432},
+    "write": {"host": "write-db", "port": 5432}
+  },
+  "pool": {"min": 5, "max": 20},
+  "ssl": true,
+  "features": ["logging", "metrics"]
+}
+```
+
+Generates:
+
+```typescript
+DATABASE_CONFIG: {
+  connections: {
+    read: { host: string; port: number };
+    write: { host: string; port: number };
+  };
+  pool: { min: number; max: number };
+  ssl: boolean;
+  features: string[];
+}
+```
+
+### Mixed Arrays
+
+```env
+ARRAY API_ENDPOINTS = [
+  {"path": "/users", "methods": ["GET", "POST"]},
+  {"path": "/orders", "methods": ["GET", "PUT", "DELETE"]}
+]
+```
+
+Generates:
+
+```typescript
+API_ENDPOINTS: Array<{
+  path: string;
+  methods: string[];
+}>;
+```
 
 ## Environment File Format
 
@@ -237,7 +324,14 @@ STRING API_URL = "https://api.example.com"
 NUMBER PORT = 3000
 BOOL DEBUG = true
 ARRAY HOSTS = ["localhost", "example.com"]
-OBJ CONFIG = {"timeout": 5000, "retries": 3}
+ARRAY PORTS = [3000, 4000, 5000]
+ARRAY MIXED = ["string", 42, true, {"nested": "object"}]
+OBJ CONFIG = {"timeout": 5000, "retries": 3, "enabled": true}
+OBJ COMPLEX_CONFIG = {
+  "database": {"host": "localhost", "port": 5432},
+  "cache": {"ttl": 300, "enabled": true},
+  "features": ["auth", "logging"]
+}
 ```
 
 **Rules:**
@@ -248,6 +342,7 @@ OBJ CONFIG = {"timeout": 5000, "retries": 3}
 - Boolean values must be `true` or `false` (case-insensitive)
 - Comments start with `#`
 - Empty lines are ignored
+- Nested objects and arrays are fully typed
 
 ## Error Handling
 
@@ -300,10 +395,11 @@ git add src/types/env-types.ts
 4. **Validate environment on application startup**
 5. **Use meaningful variable names** and group related variables
 6. **Document complex object/array structures** in comments
+7. **Leverage precise typing** for better IntelliSense and runtime safety
 
 ## Examples
 
-### Advanced Usage
+### Advanced Usage with Full Type Safety
 
 ```typescript
 import { config, validateEnv, createTypedConfig } from 'strongly-typed-env';
@@ -330,7 +426,23 @@ function loadConfig(): EnvConfig {
 }
 
 export const env = loadConfig();
+
+// Usage with full type safety
+console.log(`Database host: ${env.DATABASE_CONFIG.host}`); // TypeScript knows this is a string
+console.log(`Connection pool max: ${env.DATABASE_CONFIG.pool.max}`); // TypeScript knows this is a number
+env.API_ENDPOINTS.forEach((endpoint) => {
+  // TypeScript provides full IntelliSense for the endpoint object
+  console.log(`${endpoint.path}: ${endpoint.methods.join(', ')}`);
+});
 ```
+
+## Type Safety Benefits
+
+- **IntelliSense**: Full autocomplete for object properties and array methods
+- **Compile-time checking**: Catch type errors before runtime
+- **Refactoring safety**: Rename properties with confidence across your codebase
+- **Documentation**: Types serve as living documentation for your environment structure
+- **Runtime safety**: Combined with validation, ensures type correctness at runtime
 
 ## Contributing
 
