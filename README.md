@@ -24,6 +24,8 @@ npm install strongly-typed-env
 
 Create a `.env` file with typed environment variables:
 
+⚠️ **Warning** : Make sure to use the correct data types for each variable and each variable should start and end on a single line.
+
 ```env
 # Database Configuration
 STRING DATABASE_URL = "postgresql://localhost:5432/mydb"
@@ -43,13 +45,7 @@ BOOL DEBUG_MODE = false
 # Advanced Examples
 ARRAY PORT_NUMBERS = [3000, 4000, 5000]
 ARRAY MIXED_ARRAY = ["string", 42, true]
-OBJ SERVER_CONFIG = {
-  "host": "localhost",
-  "port": 8080,
-  "ssl": true,
-  "timeout": 30000,
-  "features": ["auth", "logging", "metrics"]
-}
+OBJ SERVER_CONFIG = {"host": "localhost","port": 8080,"ssl": true,"timeout": 30000,"features": ["auth", "logging", "metrics"]}
 ```
 
 ### 2. Generate TypeScript types
