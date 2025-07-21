@@ -1,5 +1,11 @@
 # strongly-typed-env
 
+## 2.0.1
+
+### Patch Changes
+
+- 9c10184: some bug fixes
+
 ## 2.0.0
 
 ### Major Changes
